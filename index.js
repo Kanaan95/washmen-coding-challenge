@@ -14,6 +14,12 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+// API Routing
+app.use("/api/partners", require("./routes/api/partners"));
+
 const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+// export modules (for testing)
+module.exports = server;
