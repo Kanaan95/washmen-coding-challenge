@@ -22,7 +22,7 @@ COPY . .
 # Expose container port on 5000
 EXPOSE 5000
 
-HEALTHCHECK CMD curl --fail http://localhost:5000/healthcheck || exit 1   
+HEALTHCHECK --interval=10s --timeout=2s --start-period=15s CMD curl --fail http://localhost:5000/health || exit 1   
 
 # Run app
 CMD [ "node", "index.js" ]
