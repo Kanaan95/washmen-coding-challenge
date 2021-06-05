@@ -5,11 +5,9 @@
 
 // Dependencies
 const express = require("express");
+const config = require("./config/config");
 const middleware = require("./middleware/middleware");
 const app = express();
-
-// Define the port
-const PORT = process.env.PORT || 5000;
 
 // Init middleware
 app.use(express.json({ extended: true }));
@@ -22,8 +20,8 @@ app.get("/", (req, res) => {
 // API Routing
 app.use("/api/partners", require("./routes/api/partners"));
 
-const server = app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+const server = app.listen(config.port, () => {
+  console.log(`Server is running on port ${config.port}`);
 });
 
 // export modules (for testing)
