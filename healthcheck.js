@@ -23,6 +23,7 @@ router.get("/", async (req, res) => {
   } catch (err) {
     health.message = err;
     res.status(503).send();
+    process.exit(1);
   }
 });
 
