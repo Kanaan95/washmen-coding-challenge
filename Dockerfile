@@ -6,11 +6,15 @@ ENV NODE_ENV production
 # Create app directory
 WORKDIR /usr/src/app
 
+# Create log folder
+CMD MKDIR ./logs
+
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
 COPY package*.json ./
 
+# Install dependencies
 RUN npm install
 
 # If you are building your code for production
