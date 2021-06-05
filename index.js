@@ -19,6 +19,7 @@ app.get("/", (req, res) => {
 
 // API Routing
 app.use("/api/partners", require("./routes/api/partners"));
+app.use("/health", require("./healthcheck"));
 
 const server = app.listen(config.port, () => {
   console.log(`Server is running on port ${config.port}`);
