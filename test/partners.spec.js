@@ -34,9 +34,10 @@ describe("Partners Testing", () => {
 
   // Testing the GET api/partners/search
   describe("Get Near Partners", () => {
-    it("should return 2 partners within 50 km of range from Starbucks Cafe Central London", (done) => {
+    it("should return 2 partners within 50 km (passed as query params) of range from Starbucks Cafe Central London", (done) => {
       request(server)
-        .get("/api/partners/search?distance=50&units=km")
+        .get("/api/partners/search")
+        .query({ distance: 50, units: "km" })
         .expect(200, (err, res) => {
           if (!err && res) {
             expect(res.body.length).to.equal(2);
