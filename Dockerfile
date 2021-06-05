@@ -7,7 +7,7 @@ ENV NODE_ENV production
 WORKDIR /usr/src/app
 
 # Create log folder
-CMD MKDIR ./logs
+RUN ["mkdir", ./logs]
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
