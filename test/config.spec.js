@@ -3,7 +3,7 @@
  *
  */
 
-process.env.NODE_ENV = "production";
+// process.env.NODE_ENV = "production";
 
 // Dependencies
 const prodServer = require("../index");
