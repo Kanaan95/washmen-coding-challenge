@@ -8,6 +8,7 @@
     font-size: 12px;
 }
 
-.partner__offices p {
+.partner__offices a {
     margin-left: 4px;
+    cursor: pointer;
 }

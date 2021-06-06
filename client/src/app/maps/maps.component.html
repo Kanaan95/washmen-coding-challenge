@@ -1,8 +1,13 @@
-<google-map [options]="options" width="100%" height="100%">
-    <ng-container *ngFor="let d of data">
-        <map-marker *ngFor="let o of d.offices" [position]="getCoordinates(o.coordinates)" [options]="markerOptions">
+<google-map [center]="mapCenter" [options]="options" width="100%" height="100%">
+    <map-marker [position]="starbucksMarker.coordinates" [icon]="starbucksMarker.icon" [options]="markerOptions">
+    </map-marker>
+    <div *ngFor="let d of data">
+        <map-marker #marker="mapMarker" *ngFor="let o of d.offices" [position]="getCoordinates(o.coordinates)"
+            [icon]="getMarkerIconPath(o)" [options]="markerOptions" (mapClick)="window.open(marker)">
         </map-marker>
         <map-circle [options]="options"></map-circle>
-        <map-info-window>Info Window content</map-info-window>
-    </ng-container>
+        <map-info-window #window="mapInfoWindow">
+            <partner [partner]="d" [hideBorders]="true"></partner>
+        </map-info-window>
+    </div>
 </google-map>

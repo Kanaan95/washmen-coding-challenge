@@ -11,6 +11,7 @@ import { AppErrorHandler } from './errors/app-error-handler';
 import { PartnersModule } from './partners/partners.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SearchModule } from './search/search.module';
+import { MapsService } from './services/maps.service';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,7 @@ import { SearchModule } from './search/search.module';
     SearchModule,
     AppRoutingModule
   ],
-  providers: [DataService, { provide: ErrorHandler, useClass: AppErrorHandler }],
+  providers: [DataService, MapsService, { provide: ErrorHandler, useClass: AppErrorHandler }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

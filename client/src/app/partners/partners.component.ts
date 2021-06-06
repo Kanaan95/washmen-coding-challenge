@@ -13,7 +13,6 @@ export class PartnersComponent implements OnInit {
   @Input() partners: Partners[] | undefined
 
   ngOnInit(): void {
-    console.log("Partners from comp: ", this.partners)
   }
 
 }

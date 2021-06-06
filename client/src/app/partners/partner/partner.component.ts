@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Partners } from 'src/app/shared/models/Partner';
+import { MapsService } from '../../services/maps.service';
+import { Partners } from '../../shared/models/Partner';
 
 @Component({
   selector: 'partner',
@@ -9,10 +10,22 @@ import { Partners } from 'src/app/shared/models/Partner';
 export class PartnerComponent implements OnInit {
 
   @Input() partner: Partners | undefined
+  @Input() hideBorders: boolean = false
 
-  constructor() { }
+  constructor(
+    private _mapService: MapsService
+  ) { }
 
   ngOnInit(): void {
   }
+
+  /**
+   * Zoom in on marker in map
+   * @param office 
+   */
+  onLocationClick(office: any) {
+    this._mapService.focusedMarker.next(office);
+  }
+
 
 }
