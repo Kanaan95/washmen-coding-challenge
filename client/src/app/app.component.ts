@@ -10,6 +10,8 @@ import { Partners } from './shared/models/Partner';
 export class AppComponent implements OnInit {
   title = 'client';
 
+  isSideOpen: boolean = true;
+
   constructor(private _dataService: DataService) { }
 
   partners: Partners[] | undefined;
@@ -18,5 +20,12 @@ export class AppComponent implements OnInit {
     this._dataService.getAll('/partners').subscribe(
       (res: Partners[]) => this.partners = res
     )
+  }
+
+  /**
+   * Toggles the sidebar menu
+   */
+  onToggle() {
+    this.isSideOpen = !this.isSideOpen
   }
 }

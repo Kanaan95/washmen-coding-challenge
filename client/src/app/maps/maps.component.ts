@@ -20,7 +20,8 @@ export class MapsComponent implements OnInit {
     fullscreenControl: false,
     maxZoom: 18,
     minZoom: 2,
-    streetViewControl: false
+    streetViewControl: false,
+    disableDefaultUI: true
   };
 
   // Google Maps Markers options
