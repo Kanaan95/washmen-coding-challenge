@@ -1,6 +1,5 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MapInfoWindow, MapMarker } from '@angular/google-maps';
-import { BehaviorSubject } from 'rxjs';
 import { MapsService } from '../services/maps.service';
 import { Office } from '../shared/models/Office';
 
@@ -69,6 +68,7 @@ export class MapsComponent implements OnInit, OnDestroy {
     strokeColor: "#27ae60"
   }
 
+  // Detect if any office location was clicked from partners in sidebar
   markersObs: any;
 
   ngOnInit(): void {
@@ -131,9 +131,10 @@ export class MapsComponent implements OnInit, OnDestroy {
    * Info window for marker
    * @param marker 
    */
-  openInfoWindow(marker: MapMarker) {
-    this.infoWindow?.open(marker);
-  }
+  // openInfoWindow(marker: MapMarker) {
+  //   // console.log(window)
+  //   this.infoWindow?.open(marker);
+  // }
 
 
 
