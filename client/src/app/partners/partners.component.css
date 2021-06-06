@@ -1,0 +1,8 @@
+.partners__title h3 {
+    font-weight: 400 !important;
+}
+
+.partners__list {
+    overflow-y: auto;
+    height: calc(100vh - 120px);
+}

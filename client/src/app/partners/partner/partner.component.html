@@ -1,1 +1,21 @@
-<p>partner works!</p>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">{{partner?.organization}}</h5>
+        <a href="#" class="btn mb-3 btn-outline-primary btn-website partner__website"> <i class="fas fa-globe"></i>
+            Website</a>
+
+        <p class="card-subtitle text-muted partner__services">{{partner?.services}}</p>
+        <!--  (click)="onLocationClick(office)" -->
+
+        <div class="d-flex flex-column justify-content-center align-items-start mt-2 partner__offices"
+            *ngFor="let office of partner?.offices">
+            <div class="d-flex justify-content-start align-items-start my-2">
+                <img src="assets/icons/map.svg" width="15" height="15">
+                <p class="mb-0 text-muted" title="Show Location on Map">
+                    {{office.address}}</p>
+            </div>
+
+        </div>
+
+    </div>
+</div>

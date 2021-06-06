@@ -1,0 +1,13 @@
+.btn-website {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 25px;
+}
+
+.partner__services, .partner__offices {
+    font-size: 12px;
+}
+
+.partner__offices p {
+    margin-left: 4px;
+}

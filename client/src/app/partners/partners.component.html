@@ -1,0 +1,9 @@
+<div class="partners__title px-3">
+    <h3>Partners</h3>
+</div>
+
+<ul class="list-group partners__list px-3 list-group-flush">
+    <li class="list-group-item border-0 px-0" *ngFor="let partner of partners">
+        <partner [partner]="partner"></partner>
+    </li>
+</ul>

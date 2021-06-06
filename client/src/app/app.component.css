@@ -19,7 +19,8 @@
     top: 0;
     left: -420px;
     bottom: 0;
-    background: rgb(245, 245, 245);
+    /* background: rgb(245, 245, 245); */
+    background: #ffffff;
     box-shadow: none;
     transition: all .2s ease;
 }
