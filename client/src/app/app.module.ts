@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 
 import { HttpClientModule } from '@angular/common/http';
 import { MapsModule } from './maps/maps.module';
+import { DataService } from './services/data.service';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,7 @@ import { MapsModule } from './maps/maps.module';
     MapsModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

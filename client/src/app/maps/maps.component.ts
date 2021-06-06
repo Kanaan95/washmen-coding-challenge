@@ -17,7 +17,7 @@ export class MapsComponent implements OnInit {
     zoom: 10,
     fullscreenControl: false,
     maxZoom: 18,
-    minZoom: 4,
+    minZoom: 2,
     streetViewControl: false
   };
 
