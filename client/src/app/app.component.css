@@ -1,0 +1,44 @@
+.my-container {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+
+.my-container .maps {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.my-container .partners {
+    position: absolute;
+    width: 420px;
+    top: 0;
+    left: -420px;
+    bottom: 0;
+    background: rgb(245, 245, 245);
+    box-shadow: none;
+    transition: all .2s ease;
+}
+
+.my-container .partners.active {
+    left: 0;
+    box-shadow: 0 0 20px rgb(0 0 0 / 30%);
+}
+
+.partners .toggle {
+    position: absolute;
+    top: 15px;
+    right: -23px;
+    width: 23px;
+    height: 48px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.9) 7px center/7px 10px no-repeat;
+    border: 1px solid #D4D4D4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
