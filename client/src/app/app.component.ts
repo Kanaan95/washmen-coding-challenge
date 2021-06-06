@@ -1,10 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AppError } from './errors/app-error';
+import { DataService } from './services/data.service';
+import { Partners } from './shared/models/Partner';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'client';
+
+  isSideOpen: boolean = true;
+
+  constructor(private _dataService: DataService) { }
+
+  partners: Partners[] | undefined;
+
+  ngOnInit(): void {
+    this._dataService.getAll('/partners').subscribe(
+      (res: Partners[]) => this.partners = res
+    )
+  }
+
+  /**
+   * Toggles the sidebar menu
+   */
+  onToggle() {
+    this.isSideOpen = !this.isSideOpen
+  }
 }
