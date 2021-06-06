@@ -10,7 +10,7 @@ export class PartnersComponent implements OnInit {
 
   constructor() { }
 
-  @Input() partners: Partners[] | undefined
+  @Input() partners: Partners[] = []
 
   ngOnInit(): void {
   }

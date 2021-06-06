@@ -1,7 +1,8 @@
 <div class="card" [class.border-0]="hideBorders">
     <div class="card-body">
         <h5 class="card-title">{{partner?.organization}}</h5>
-        <a href="#" class="btn mb-3 btn-outline-primary btn-website partner__website"> <i class="fas fa-globe"></i>
+        <a href="{{partner?.website}}" target="_blank"
+            class="btn mb-3 btn-outline-primary btn-website partner__website"> <i class="fas fa-globe"></i>
             Website</a>
 
         <p class="card-subtitle text-muted partner__services">{{partner?.services}}</p>

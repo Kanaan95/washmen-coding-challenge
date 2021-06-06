@@ -3,7 +3,7 @@
 </div>
 
 <ul class="list-group partners__list px-3 list-group-flush">
-    <li class="list-group-item border-0 px-0" *ngFor="let partner of partners">
+    <li class="list-group-item border-0 px-0" *ngFor="let partner of partners | sortBy:'asc':'organization'">
         <partner [partner]="partner"></partner>
     </li>
 </ul>
