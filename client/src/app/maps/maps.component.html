@@ -1,1 +1,5 @@
-<google-map></google-map>
+<google-map [options]="options">
+    <map-marker *ngFor="let markerPosition of markerPositions" [position]="markerPosition" [options]="markerOptions">
+    </map-marker>
+    <map-circle [options]="options"></map-circle>
+</google-map>
