@@ -1,5 +1,6 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MapInfoWindow, MapMarker } from '@angular/google-maps';
+import { Observable, forkJoin } from 'rxjs';
 import { MapsService } from '../services/maps.service';
 import { Office } from '../shared/models/Office';
 
@@ -68,10 +69,13 @@ export class MapsComponent implements OnInit, OnDestroy {
     strokeColor: "#27ae60"
   }
 
+
   // Detect if any office location was clicked from partners in sidebar
+  radiusObs: any;
   markersObs: any;
 
   ngOnInit(): void {
+
     this.markersObs = this._mapsService.focusedMarker.subscribe(
       (office: Office) => {
         if (office) {
@@ -79,9 +83,22 @@ export class MapsComponent implements OnInit, OnDestroy {
         }
       }
     )
+    this.radiusObs = this._mapsService.radiusBehavior.subscribe(
+      (data: number) => {
+        this.circleOptions =
+        {
+          ...this.circleOptions,
+          radius:
+            data * 1000
+        }
+      }
+    )
+
+
   }
 
   ngOnDestroy(): void {
+    this.radiusObs?.unsubscribe()
     this.markersObs?.unsubscribe()
   }
 

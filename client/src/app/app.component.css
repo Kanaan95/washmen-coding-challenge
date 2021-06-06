@@ -43,3 +43,17 @@
     justify-content: center;
     align-items: center;
 }
+
+@media (max-width: 600px) {
+    .my-container .partners {
+        width: 400px;
+        left: -400px;
+    }
+}
+
+@media (max-width: 400px) {
+    .my-container .partners {
+        width: calc(100vw - 24px);
+        left: calc(24px - 100vw)
+    }
+}

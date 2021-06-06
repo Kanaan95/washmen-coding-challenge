@@ -8,6 +8,8 @@ export class MapsService {
 
   focusedMarker = new BehaviorSubject<any>(null)
 
+  radiusBehavior = new BehaviorSubject<number>(0)
+
   constructor() { }
 
 }

@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators'
@@ -29,6 +29,16 @@ export class DataService {
         catchError(this.handleError)
       )
   }
+
+  getSome(url: string, distance: number, units: string = 'km'): Observable<Array<Partners>> {
+    let params = new HttpParams().set('distance', distance).set('units', units)
+    return this._httpClient.get<Array<Partners>>(environment.rootApi + url, { params })
+      .pipe(
+        retry(3),
+        catchError(this.handleError)
+      )
+  }
+
 
   private handleError(error: HttpErrorResponse) {
 
