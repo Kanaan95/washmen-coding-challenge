@@ -3,6 +3,11 @@
         <maps [data]="partners"></maps>
     </div>
     <div class="partners" [ngClass]="{'active': isSideOpen}">
+        <search></search>
+        <partners *ngIf="partners; else empty" [partners]="partners"></partners>
+        <ng-template #empty>
+            <h1>Empty</h1>
+        </ng-template>
         <div class="toggle" (click)="onToggle()">
             <i class="fas fa-chevron-{{isSideOpen? 'left' : 'right'}}"></i>
         </div>

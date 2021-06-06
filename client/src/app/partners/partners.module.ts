@@ -12,6 +12,10 @@ import { PartnerComponent } from './partner/partner.component';
   ],
   imports: [
     CommonModule
+  ],
+  exports: [
+    PartnerComponent,
+    PartnersComponent
   ]
 })
 export class PartnersModule { }

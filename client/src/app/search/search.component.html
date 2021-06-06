@@ -1,0 +1,4 @@
+<form [formGroup]="searchForm" (ngSubmit)="onSubmit()" class="searchForm">
+    <input type="number" min="0" formControlName="query" class="form-control" placeholder="Search within range (in km)">
+    <img src="assets/icons/google-maps.svg" class="searchForm__locationIcon" alt="Google Maps Location Icon">
+</form>

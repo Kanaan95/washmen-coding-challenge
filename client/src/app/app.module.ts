@@ -8,6 +8,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { MapsModule } from './maps/maps.module';
 import { DataService } from './services/data.service';
 import { AppErrorHandler } from './errors/app-error-handler';
+import { PartnersModule } from './partners/partners.module';
+import { FormsModule } from '@angular/forms';
+import { SearchModule } from './search/search.module';
 
 @NgModule({
   declarations: [
@@ -16,7 +19,10 @@ import { AppErrorHandler } from './errors/app-error-handler';
   imports: [
     BrowserModule,
     HttpClientModule,
+    FormsModule,
     MapsModule,
+    PartnersModule,
+    SearchModule,
     AppRoutingModule
   ],
   providers: [DataService, { provide: ErrorHandler, useClass: AppErrorHandler }],
