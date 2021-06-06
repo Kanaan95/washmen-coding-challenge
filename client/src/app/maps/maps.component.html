@@ -1,6 +1,8 @@
 <google-map [options]="options">
-    <map-marker *ngFor="let markerPosition of markerPositions" [position]="markerPosition" [options]="markerOptions">
-    </map-marker>
-    <map-circle [options]="options"></map-circle>
-    <map-info-window>Info Window content</map-info-window>
+    <ng-container *ngFor="let d of data">
+        <map-marker *ngFor="let o of d.offices" [position]="getCoordinates(o.coordinates)" [options]="markerOptions">
+        </map-marker>
+        <map-circle [options]="options"></map-circle>
+        <map-info-window>Info Window content</map-info-window>
+    </ng-container>
 </google-map>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'maps',
@@ -9,7 +9,9 @@ export class MapsComponent implements OnInit {
 
   constructor() { }
 
-  google: any;
+  /*  This is the data that will passed to the google maps component
+      Each object has coordinates that will we pass them for the markers */
+  @Input() data: any
 
   // Google Maps options
   options: google.maps.MapOptions = {
@@ -43,6 +45,25 @@ export class MapsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  /**
+ * Converts string coordinates to object
+ * @param coords
+ * @access private
+ * @returns 
+ */
+  getCoordinates(coords: string | boolean): google.maps.LatLngLiteral {
+    coords = typeof coords == 'string' && coords.length > 0 && coords.split(',').length > 0 ? coords : false;
+
+    if (coords) {
+      const lat = Number(coords.split(',')[0])
+      const lng = Number(coords.split(',')[1])
+      return { lat, lng }
+    }
+    else {
+      return { lat: -90, lng: -90 };
+    }
   }
 
 }
