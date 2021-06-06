@@ -2,9 +2,9 @@
     <div class="maps">
         <maps [data]="partners"></maps>
     </div>
-    <div class="partners" [ngClass]="{'active': !isSideOpen}">
+    <div class="partners" [ngClass]="{'active': isSideOpen}">
         <div class="toggle" (click)="onToggle()">
-            <i class="fas fa-chevron-{{!isSideOpen? 'left' : 'right'}}"></i>
+            <i class="fas fa-chevron-{{isSideOpen? 'left' : 'right'}}"></i>
         </div>
     </div>
 </div>
