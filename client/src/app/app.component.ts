@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AppError } from './errors/app-error';
 import { DataService } from './services/data.service';
 import { Partners } from './shared/models/Partner';
 
