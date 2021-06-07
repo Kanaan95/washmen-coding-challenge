@@ -76,6 +76,7 @@ export class MapsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
+    // Detect any change of the focused marker
     this.markersObs = this._mapsService.focusedMarker.subscribe(
       (office: Office) => {
         if (office) {
@@ -83,12 +84,16 @@ export class MapsComponent implements OnInit, OnDestroy {
         }
       }
     )
+
+    // Detect any change of the circle radius
     this.radiusObs = this._mapsService.radiusBehavior.subscribe(
       (data: number) => {
         this.circleOptions =
         {
           ...this.circleOptions,
           radius:
+            // The circle options takes the radius in meters
+            // We convert it to kilometeres
             data * 1000
         }
       }

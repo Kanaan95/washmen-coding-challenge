@@ -1,22 +1,36 @@
-<div class="card" [class.border-0]="hideBorders">
-    <div class="card-body">
-        <h5 class="card-title">{{partner?.organization}}</h5>
+<div class="card" [class.border-0]="hideBorders" [class.p-0]="officeMarker">
+    <div class="card-body" [class.p-0]="officeMarker">
+        <h5 class=" card-title">{{partner?.organization}}</h5>
         <a href="{{partner?.website}}" target="_blank"
             class="btn mb-3 btn-outline-primary btn-website partner__website"> <i class="fas fa-globe"></i>
             Website</a>
 
-        <p class="card-subtitle text-muted partner__services">{{partner?.services}}</p>
-        <!--  (click)="onLocationClick(office)" -->
+        <p class="text-muted partner__customers" [class.mb-0]="officeMarker">Customers {{partner?.customerLocations}}
+        </p>
+        <p class="text-muted partner__services" *ngIf="!officeMarker">{{partner?.services}}</p>
 
-        <div class="d-flex flex-column justify-content-center align-items-start mt-2 partner__offices"
-            *ngFor="let office of partner?.offices">
+        <div class="d-flex flex-column justify-content-center align-items-start mt-2 partner__office"
+            *ngIf="officeMarker; else officeList">
             <div class="d-flex justify-content-start align-items-start my-2">
                 <img src="assets/icons/map.svg" width="15" height="15">
-                <a class="mb-0 text-muted" title="Show Location on Map" (click)="onLocationClick(office)">
-                    {{office.address}}</a>
+                <a class="mb-0 text-muted location single">
+                    {{officeMarker.address}} </a>
             </div>
-
         </div>
+
+        <!-- Display office list -->
+        <ng-template #officeList>
+            <div class="d-flex flex-column justify-content-center align-items-start mt-2 partner__offices"
+                *ngFor="let office of partner?.offices">
+                <div class="d-flex justify-content-start align-items-start my-2">
+                    <img src="assets/icons/map.svg" width="15" height="15">
+                    <a class="mb-0 text-muted" title="Show Location on Map" (click)="onLocationClick(office)">
+                        {{office.address}}</a>
+                </div>
+
+            </div>
+        </ng-template>
+
 
     </div>
 </div>
