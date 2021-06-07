@@ -30,6 +30,13 @@ export class DataService {
       )
   }
 
+  /**
+ * GET request - Returns partners that are within x distance
+ * @param url 
+ * @param distance
+ * @optional units 
+ * @returns 
+ */
   getSome(url: string, distance: number, units: string = 'km'): Observable<Array<Partners>> {
     let params = new HttpParams().set('distance', distance).set('units', units)
     return this._httpClient.get<Array<Partners>>(environment.rootApi + url, { params })

@@ -15,7 +15,10 @@
 
             <!-- If no partners, show this template -->
             <ng-template #empty>
-                <h1>Empty</h1>
+                <div class="w-100 px-3 no_data">
+                    <img src="assets/icons/no_data.svg" class="my-3" alt="No Data">
+                    <h4 class="text-muted mt-4">No Partner within that range</h4>
+                </div>
             </ng-template>
         </div>
 

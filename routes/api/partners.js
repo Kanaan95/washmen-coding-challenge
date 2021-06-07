@@ -44,7 +44,7 @@ router.get("/search", (req, res) => {
   _data.read("partners", "partners", (err, data) => {
     // If data file is found
     if (!err && data) {
-      if (distance && units) {
+      if (Number(distance) != 0 && units) {
         // Filter the partners that are within the giving distance received from the query params
         const nearPartners = data.filter((partner) => {
           // Get the office(s) of the partner
