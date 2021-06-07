@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AppError } from './errors/app-error';
 import { DataService } from './services/data.service';
+import { MapsService } from './services/maps.service';
 import { Partners } from './shared/models/Partner';
 
 @Component({
@@ -9,12 +10,12 @@ import { Partners } from './shared/models/Partner';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'client';
 
   isSideOpen: boolean = true;
 
-  constructor(private _dataService: DataService) { }
+  constructor(private _dataService: DataService, private _mapsService: MapsService) { }
 
+  // Init list of partners
   partners: Partners[] | undefined;
 
   ngOnInit(): void {
@@ -28,5 +29,18 @@ export class AppComponent implements OnInit {
    */
   onToggle() {
     this.isSideOpen = !this.isSideOpen
+  }
+
+  searchPartnersWithin(range: number) {
+    const radius = typeof range == 'number' ? range : false;
+    if (radius) {
+      this._mapsService.radiusBehavior.next(radius)
+      this._dataService.getSome('/partners/search', range).subscribe(
+        (res: Partners[]) => {
+          this.partners = res
+
+        }
+      )
+    }
   }
 }

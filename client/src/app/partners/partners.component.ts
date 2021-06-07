@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Partners } from '../shared/models/Partner';
 
 @Component({
   selector: 'partners',
@@ -8,6 +9,8 @@ import { Component, OnInit } from '@angular/core';
 export class PartnersComponent implements OnInit {
 
   constructor() { }
+
+  @Input() partners: Partners[] = []
 
   ngOnInit(): void {
   }

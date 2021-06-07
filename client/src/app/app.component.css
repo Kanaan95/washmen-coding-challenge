@@ -19,7 +19,8 @@
     top: 0;
     left: -420px;
     bottom: 0;
-    background: rgb(245, 245, 245);
+    /* background: rgb(245, 245, 245); */
+    background: #ffffff;
     box-shadow: none;
     transition: all .2s ease;
 }
@@ -41,4 +42,18 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+@media (max-width: 600px) {
+    .my-container .partners {
+        width: 400px;
+        left: -400px;
+    }
+}
+
+@media (max-width: 400px) {
+    .my-container .partners {
+        width: calc(100vw - 24px);
+        left: calc(24px - 100vw)
+    }
 }

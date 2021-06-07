@@ -1,0 +1,26 @@
+.searchForm {
+    width: 100%;
+    position: relative;
+}
+
+input {
+    position: relative;
+    border-radius: .25rem;
+    border: 1px solid #D4D4D4;
+    /* box-shadow: 2px 4px rgb(0 0 0 / 30%); */
+    padding-left: 40px;
+}
+
+input::placeholder {
+    opacity: .5;
+}
+
+img.searchForm__locationIcon, img.searchForm__searchIcon {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    object-fit: contain;
+    width: 24px;
+    height: 100%;
+    transform: translateY(-50%);
+}

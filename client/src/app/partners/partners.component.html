@@ -1,1 +1,16 @@
-<p>partners works!</p>
+<div class="partners__title px-3">
+    <h3>Partners</h3>
+</div>
+
+<ul class="list-group partners__list px-3 list-group-flush" *ngIf="partners && partners.length>0; else emptyList">
+    <li class="list-group-item border-0 px-0" *ngFor="let partner of partners | sortBy:'asc':'organization'">
+        <partner [partner]="partner"></partner>
+    </li>
+</ul>
+
+<ng-template #emptyList>
+    <div class="w-100 px-3 no_data">
+        <img src="assets/icons/no_data.svg" class="my-3" alt="No Data">
+        <h4 class="text-muted mt-4">No Partner within that range</h4>
+    </div>
+</ng-template>
