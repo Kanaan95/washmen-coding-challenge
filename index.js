@@ -22,11 +22,17 @@ const logStream = fs.createWriteStream(
 app.use(express.json({ extended: true }));
 app.use(middleware);
 
+/**
+ * We have to use express.static to let express know there is a dist folder
+ * and assets of the Angular build.
+ */
+app.use(express.static(process.cwd() + "/client/dist/client/"));
+
 // Init logging
 app.use(log("combined", { stream: logStream }));
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.sendFile(process.cwd() + "/client/dist/client/index.html");
 });
 
 // API Routing
