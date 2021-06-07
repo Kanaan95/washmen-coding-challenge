@@ -1,5 +1,5 @@
 [
-    {
+  {
     "id": 1,
     "urlName": "balance-at-work",
     "organization": "Balance at Work",
@@ -41,8 +41,8 @@
     "services": "We are passionate about people and the capability we all have to evolve and make great things together. We free company's potential through their people through innovative tools, holistic solutions and tailored Human Resources Strategies.",
     "offices": [
       {
-        "location": "MÃ©xico City, Mexico",
-        "address": "Emerson 150 - 503, Colonia Chapultepec Morales, DelegaciÃ³n Miguel Hidalgo, MÃ©xico City, Mexico, CP 11570",
+        "location": "México City, Mexico",
+        "address": "Emerson 150 - 503, Colonia Chapultepec Morales, Delegación Miguel Hidalgo, México City, Mexico, CP 11570",
         "coordinates": "19.4361004,-99.18870959999998"
       }
     ]
@@ -54,7 +54,7 @@
     "customerLocations": "globally",
     "willWorkRemotely": true,
     "website": "http://www.bluesquare360.com/",
-    "services": "Blue Square 360 provides a professionally managed service covering all areas of a 360Â° Feedback initiative. We're experienced in supporting projects of all sizes, and always deliver a personal service that provides the level of support you need to ensure your 360 initiative delivers results for the business.",
+    "services": "Blue Square 360 provides a professionally managed service covering all areas of a 360° Feedback initiative. We're experienced in supporting projects of all sizes, and always deliver a personal service that provides the level of support you need to ensure your 360 initiative delivers results for the business.",
     "offices": [
       {
         "location": "Singapore",
@@ -103,15 +103,15 @@
   {
     "id": 7,
     "urlName": "vanessa-gomez",
-    "organization": "Vanessa GÃ³mez (Freelance consultant)",
+    "organization": "Vanessa Gómez (Freelance consultant)",
     "customerLocations": "across Central America",
     "willWorkRemotely": true,
     "website": null,
     "services": "Grow your staff to grow your business! With more than 20 years fostering organizational success for a broad range of companies, I can support you from start to end in uncovering and developing your staff talents, and help them take charge of their own growth.",
     "offices": [
       {
-        "location": "San JosÃ©, Costa Rica",
-        "address": "Condominio Villas de Valencia 93, San Rafael de EscazÃº 10203, San JosÃ©, Costa Rica",
+        "location": "San José, Costa Rica",
+        "address": "Condominio Villas de Valencia 93, San Rafael de Escazú 10203, San José, Costa Rica",
         "coordinates": "9.932159,-84.14062790000003"
       }
     ]
@@ -119,7 +119,7 @@
   {
     "id": 8,
     "urlName": "lead-tcml",
-    "organization": "LEAD TCM&amp;L",
+    "organization": "LEAD TCM&L",
     "customerLocations": "in Europe, UAE and Japan",
     "willWorkRemotely": true,
     "website": "http://www.leadtcml.com",
@@ -246,11 +246,11 @@
   {
     "id": 15,
     "urlName": "lincoln-learning",
-    "organization": "Lincoln L&amp;D",
+    "organization": "Lincoln L&D",
     "customerLocations": "across Australasia, SE Asia, Africa and the Middle East",
     "willWorkRemotely": true,
     "website": "http://www.lincolnlearning.com.au/",
-    "services": "Lincoln Learning &amp; Development facilitates team performance, leadership development and management coaching programs. We take a practical, real-world perspective and look for actionable steps to bring about change.",
+    "services": "Lincoln Learning & Development facilitates team performance, leadership development and management coaching programs. We take a practical, real-world perspective and look for actionable steps to bring about change.",
     "offices": [
       {
         "location": "Adelaide",
