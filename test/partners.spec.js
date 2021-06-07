@@ -47,6 +47,19 @@ describe("Partners Testing", () => {
           }
         });
     });
+
+    it("should return all 17 partners if there are no query params", (done) => {
+      request(server)
+        .get("/api/partners/search")
+        .expect(200, (err, res) => {
+          if (!err && res) {
+            expect(res.body.length).to.equal(17);
+            done();
+          } else {
+            done(err);
+          }
+        });
+    });
   });
 
   // Testing the GET api/partners/id=:id
