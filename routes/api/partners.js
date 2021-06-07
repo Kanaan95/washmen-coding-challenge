@@ -39,11 +39,12 @@ router.get("/search", (req, res) => {
   // Deconstruct the query params
   const { distance, units } = req.data;
 
-  if (distance && units) {
-    // Read the data from partners
-    _data.read("partners", "partners", (err, data) => {
-      // If data file is found
-      if (!err && data) {
+  // if (distance && units) {
+  // Read the data from partners
+  _data.read("partners", "partners", (err, data) => {
+    // If data file is found
+    if (!err && data) {
+      if (distance && units) {
         // Filter the partners that are within the giving distance received from the query params
         const nearPartners = data.filter((partner) => {
           // Get the office(s) of the partner
@@ -93,13 +94,17 @@ router.get("/search", (req, res) => {
 
         res.status(200).send(nearPartners);
       } else {
-        // Server error: data file not found
-        res.status(500).send(err);
+        res.status(200).send(data);
       }
-    });
-  } else {
-    res.status(403).send({ error: "Invalid request. Missing required fields" });
-  }
+    } else {
+      // Server error: data file not found
+      res.status(500).send(err);
+    }
+  });
+  // }
+  // else {
+  //   res.status(403).send({ error: "Invalid request. Missing required fields" });
+  // }
 });
 
 /**
