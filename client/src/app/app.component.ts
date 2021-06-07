@@ -32,15 +32,13 @@ export class AppComponent implements OnInit {
   }
 
   searchPartnersWithin(range: number) {
-    const radius = typeof range == 'number' ? range : false;
-    if (radius) {
-      this._mapsService.radiusBehavior.next(radius)
-      this._dataService.getSome('/partners/search', range).subscribe(
-        (res: Partners[]) => {
-          this.partners = res
+    const radius = typeof range == 'number' ? range : 0;
+    this._mapsService.radiusBehavior.next(radius)
+    this._dataService.getSome('/partners/search', radius).subscribe(
+      (res: Partners[]) => {
+        this.partners = res
 
-        }
-      )
-    }
+      }
+    )
   }
 }
