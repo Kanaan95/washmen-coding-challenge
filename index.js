@@ -32,7 +32,7 @@ app.use(express.static(process.cwd() + "/client/dist/client/"));
 app.use(log("combined", { stream: logStream }));
 
 app.get("/", (req, res) => {
-  res.sendFile(process.cwd() + "/client/dist/client/index.html");
+  res.status(200).sendFile(process.cwd() + "/client/dist/client/index.html");
 });
 
 // API Routing
