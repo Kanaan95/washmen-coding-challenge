@@ -60,7 +60,7 @@ docker build . -t <image-name>
 
 // Replace <image-name> with the same as above, <container-name> with a name of your choice. 
 // If ommitted, a name will be created automatically
-docker run -it -p  5000:5000 --name <container-name> <image-name>
+docker run -d -p  5000:5000 --name <container-name> <image-name>
 
 // Check the container
 docker ps
@@ -72,7 +72,7 @@ Or you directly pull the image from docker using the following step.
 ```
 // Docker will pull the latest image from docker hub if the image is not found locally
 
-docker run -it -p  5000:5000 --name <container-name> kanaan95/coding-backend
+docker run -d -p  5000:5000 --name <container-name> kanaan95/coding-backend
 ```
 You can access the application on the web at this address http://localhost:5000
 
