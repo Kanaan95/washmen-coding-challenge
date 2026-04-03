@@ -8,6 +8,8 @@ module.exports = (req, res, next) => {
   // Get the URL and parse it
   const parsedUrl = url.parse(req.url, true);
 
+  const testVar = null;
+
   // Get the query string as an object
   const queryStringObject = parsedUrl.query;
 

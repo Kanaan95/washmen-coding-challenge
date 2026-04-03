@@ -79,3 +79,5 @@ You can access the application on the web at this address http://localhost:5000
 # Questions
 
 For questions about this project, please see my GitHub at kanaan95, or reach out by email at kanaan95@live.com
+
+# Section CodeAudit AI
