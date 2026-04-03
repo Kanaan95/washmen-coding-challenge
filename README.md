@@ -1,5 +1,7 @@
 # Washmen Coding Challenge
 
+## Testing the CodeAudit AI
+
 ## Prerequisites
 There are some prerequisites for this project. You need to have NodeJs and Angular CLI installed on your laptop. If you want to run this on your laptop you need to have these on your laptop.
 - NodeJs
