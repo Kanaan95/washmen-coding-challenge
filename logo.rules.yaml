@@ -1,6 +1,6 @@
 # logo.rules.yaml
 # Generated for: washmen-coding-challenge
-# Stack: Node.js/Express + Angular 12 + Docker
+# Stack: Node.js/Express (CommonJS) · Angular 12 · Mocha/Chai · Docker
 # Generated: 2026-04-05
 
 version: 1
@@ -10,125 +10,325 @@ defaults:
   minimum_confidence: 0.80
 
 paths:
-  # ── API routes ──────────────────────────────────────────────────────────────
+  # ── API routes ────────────────────────────────────────────────────────────────
   - match: "routes/api/**"
     rules:
       - id: api-input-validation
         severity: high
         instruction: >
           All query and path parameters must be validated before use.
-          Flag any endpoint that reads req.query or req.params without
-          type checking, range checking, or whitelist validation.
+          req.data (populated by the custom middleware) contains raw
+          untyped strings. Flag any endpoint that reads req.data.distance,
+          req.data.units, or req.params.id without explicit type checking,
+          range checking, or an allowlist for units. Specifically:
+          (1) distance must be a finite positive number;
+          (2) units must be one of ["km", "mi"] or similar whitelist;
+          (3) :id must be a positive integer.
 
       - id: api-no-hardcoded-coordinates
+        severity: high
+        instruction: >
+          The Starbucks reference point (lat: 51.5144636, long: -0.142571)
+          is currently hard-coded inside the route handler. Business
+          constants like geo coordinates must live in config/config.js or
+          a dedicated constants file, not inline in route logic. Flag any
+          numeric literal that looks like a latitude or longitude (6+ decimal
+          places, value between -180 and 180) embedded in a route handler.
+
+      - id: api-no-raw-error-in-response
+        severity: high
+        instruction: >
+          Routes currently pass the raw `err` object from the fs callback
+          directly to res.status(404).json(err) and res.status(500).send(err).
+          This can expose internal file paths, stack traces, or OS-level
+          error codes to the client. Flag any res.json(err) or res.send(err)
+          where `err` is an unfiltered Error or callback error. Error
+          responses should contain only a sanitised message string.
+
+      - id: api-nan-guard
+        severity: high
+        instruction: >
+          Coordinates are parsed with Number() without a NaN or bounds check.
+          Number("invalid") returns NaN, which silently corrupts distance
+          calculations and may cause all partners to be included or excluded
+          incorrectly. Flag any Number() or parseInt() call on
+          user-supplied or data-file values that is not followed by a
+          Number.isFinite() or isNaN() guard.
+
+      - id: api-id-coercion
         severity: medium
         instruction: >
-          Business constants (e.g. reference coordinates, magic numbers)
-          should live in a config or constants file, not inline in route handlers.
-          Flag any hard-coded numeric literals that represent geo or domain values.
+          The :id route uses `+req.params.id` (unary plus) to coerce the
+          path parameter to a number. This is fragile: `+""` is 0,
+          `+null` is 0, and `+"abc"` is NaN. Flag uses of unary plus or
+          Number() on req.params values without explicit NaN/type guards.
+          Use parseInt(req.params.id, 10) and validate the result is a
+          positive integer instead.
 
-  # ── Middleware ───────────────────────────────────────────────────────────────
+  # ── Middleware ────────────────────────────────────────────────────────────────
   - match: "middleware/**"
     rules:
       - id: middleware-blast-radius
         severity: high
         instruction: >
-          Middleware changes apply to every request. Any modification here
-          must include a description of the intended scope, and ideally a
-          corresponding test update in the test/ folder.
+          middleware/middleware.js runs on every request. Any change here
+          affects all routes globally. Flag changes that (a) remove or
+          alter the query string parsing that populates req.data, (b) add
+          new req mutations without documenting the new property, or (c)
+          lack a corresponding test update in test/.
 
-  # ── Configuration ────────────────────────────────────────────────────────────
-  - match: "config/**"
-    rules:
-      - id: config-no-secrets
+      - id: middleware-no-validation-bypass
         severity: high
         instruction: >
+          The middleware currently attaches raw query string values to
+          req.data with no sanitisation. Flag any change that adds
+          new fields to req.data from user-supplied input without also
+          adding validation (type coercion, allowlisting, length limits).
+
+  # ── Configuration ─────────────────────────────────────────────────────────────
+  - match: "config/**"
+    rules:
+      - id: config-no-hardcoded-secrets
+        severity: critical
+        instruction: >
           Configuration files must not contain hard-coded secrets, API keys,
-          passwords, or tokens. All sensitive values must be read from
-          environment variables. Flag any string literal that looks like a
-          credential or key.
+          or tokens. All sensitive values must be read from environment
+          variables via process.env. Flag any string literal that resembles
+          a credential, token, or private key in config/config.js.
 
       - id: config-env-vars-documented
-        severity: low
+        severity: medium
         instruction: >
-          Any newly introduced environment variable should be mentioned in
-          README.md or an .env.example file so developers can onboard without
-          guessing required env setup.
+          Any newly introduced environment variable (process.env.XXX) must
+          also appear in .env.example with a placeholder and a comment
+          describing its purpose. Flag PRs that add process.env references
+          in config/ without updating .env.example.
 
-  # ── Core library ─────────────────────────────────────────────────────────────
+      - id: config-coordinates-in-config
+        severity: medium
+        instruction: >
+          Geo reference coordinates (e.g. the Starbucks meeting point) and
+          other domain constants (default radius, supported unit values)
+          belong in config/config.js under a well-named key, not scattered
+          across route handlers and Angular components. Flag PRs that
+          introduce numeric coordinate literals anywhere other than
+          config/ or a dedicated constants file.
+
+  # ── Core library ──────────────────────────────────────────────────────────────
   - match: "lib/**"
     rules:
+      - id: lib-path-traversal
+        severity: critical
+        instruction: >
+          lib/data.js builds file paths by concatenating caller-supplied
+          `dir` and `fileName` arguments: `baseDir + dir + "/" + fileName + ".json"`.
+          If either argument is ever derived from user input, an attacker
+          could supply `../../etc/passwd` to read arbitrary files.
+          Flag any change that (a) passes user-supplied values into
+          lib.read(), or (b) removes the implicit restriction that
+          `dir`/`fileName` are hardcoded call-site strings.
+
       - id: lib-test-coverage
         severity: medium
         instruction: >
-          Changes to lib/ (data access, helpers) should be accompanied by
-          corresponding test updates in test/. Flag PRs that modify lib/
-          but do not touch any spec file.
+          Changes to lib/ (data access, helpers) must be accompanied by
+          updates in test/. Flag PRs that modify lib/data.js or
+          lib/helpers.js without a corresponding change in test/data.spec.js
+          or test/helpers.spec.js.
 
-  # ── Frontend services ────────────────────────────────────────────────────────
-  - match: "client/src/app/services/**"
-    rules:
-      - id: service-http-error-handling
-        severity: medium
-        instruction: >
-          HTTP services must handle errors at the appropriate layer and must
-          not retry on 4xx client errors (retrying on 400/404 is a bug).
-          Flag any Observable pipeline that applies retry() without filtering
-          out non-retriable status codes.
-
-  # ── Frontend environments ────────────────────────────────────────────────────
-  - match: "client/src/environments/**"
-    rules:
-      - id: env-no-api-keys
+      - id: lib-helpers-nan-safety
         severity: high
         instruction: >
-          Environment files are committed to source control. They must not
-          contain API keys, tokens, or secrets. Flag any string value that
-          resembles a key (long alphanumeric strings, values containing
-          "key", "token", "secret", "apiKey").
+          lib/helpers.js performs Haversine distance calculations using
+          Number() conversions. Flag any change to the distance helper
+          that removes or weakens NaN guards, or that changes the formula
+          without updating the corresponding unit tests in helpers.spec.js.
 
-  # ── Dockerfile ───────────────────────────────────────────────────────────────
-  - match: "Dockerfile"
-    rules:
-      - id: docker-no-root-user
-        severity: medium
-        instruction: >
-          The container should not run the application as root. Verify a
-          non-root USER is declared before the final CMD/ENTRYPOINT. Flag
-          if USER is absent.
-
-      - id: docker-no-build-secrets
-        severity: high
-        instruction: >
-          Build args and ENV instructions must not be used to pass secrets
-          into the image. Secrets baked into image layers are extractable.
-          Flag any ARG or ENV that looks like a credential.
-
-  # ── Tests ────────────────────────────────────────────────────────────────────
+  # ── Tests ─────────────────────────────────────────────────────────────────────
   - match: "test/**"
     rules:
       - id: test-meaningful-assertions
-        severity: low
+        severity: medium
         instruction: >
-          Tests should assert on response body shape and field values,
-          not just HTTP status codes. Flag test cases that only check
-          res.status without inspecting the returned data.
+          Tests should assert on response body content, not only HTTP
+          status codes. Flag test cases that only call .expect(200) or
+          .expect(404) without also inspecting res.body fields, array
+          length, or specific property values.
 
+      - id: test-negative-and-edge-cases
+        severity: medium
+        instruction: >
+          The test suite currently lacks negative cases for invalid input:
+          non-numeric distance, unsupported units, malformed coordinates.
+          Flag PRs that add new route behaviour without a corresponding
+          test for invalid/boundary input (e.g. distance=-1, units="lightyear",
+          id="abc").
+
+      - id: test-no-real-credentials
+        severity: critical
+        instruction: >
+          Test files must not contain real API keys, tokens, or credentials.
+          Flag any string in test/ that resembles a key or secret
+          (long alphanumeric string, value containing "key", "token",
+          "secret", "apiKey").
+
+  # ── Frontend services ─────────────────────────────────────────────────────────
+  - match: "client/src/app/services/**"
+    rules:
+      - id: service-retry-on-4xx
+        severity: high
+        instruction: >
+          DataService currently applies retry(3) unconditionally. Retrying
+          on 4xx client errors (e.g. 400 Bad Request, 404 Not Found) is
+          incorrect — the same request will fail every time and wastes
+          resources. Flag any Observable pipeline that uses retry() or
+          retryWhen() without first filtering out non-retriable status codes
+          (i.e. 4xx responses should not be retried; only 5xx or network
+          errors should be).
+
+      - id: service-error-user-feedback
+        severity: medium
+        instruction: >
+          The AppErrorHandler currently only logs to the console and
+          provides no user-visible feedback. Flag changes to services or
+          the error handler that silently swallow errors without either
+          displaying a UI message or re-throwing for the component to handle.
+
+  # ── Frontend maps component ───────────────────────────────────────────────────
+  - match: "client/src/app/maps/**"
+    rules:
+      - id: maps-no-hardcoded-coordinates
+        severity: high
+        instruction: >
+          The MapsComponent currently hard-codes the Starbucks reference
+          coordinates (51.5144636, -0.142571) three or more times.
+          These must be sourced from a shared Angular constant or an
+          environment variable, not duplicated inline. Flag any numeric
+          latitude/longitude literal in maps.component.ts outside of a
+          named constant or environment import.
+
+      - id: maps-coordinate-validation
+        severity: high
+        instruction: >
+          getCoordinates() splits an office.coordinates string without
+          validating that exactly two parts exist, and uses Number() without
+          a NaN guard. The fallback { lat: -90, lng: -90 } is a valid
+          geographic coordinate (South Pole) and would silently place a
+          marker at the wrong location instead of reporting an error.
+          Flag any coordinate parsing that lacks: (1) a length check on
+          the split result, (2) a Number.isFinite() guard, and (3) an
+          error log or thrown Error on invalid input.
+
+      - id: maps-subscription-cleanup
+        severity: medium
+        instruction: >
+          Every RxJS subscription created in ngOnInit (focusedMarker,
+          radiusBehavior) must be unsubscribed in ngOnDestroy to prevent
+          memory leaks. Flag components that subscribe to BehaviorSubjects
+          or Observables but do not call .unsubscribe() in ngOnDestroy,
+          or that do not use the async pipe or takeUntil pattern.
+
+  # ── Frontend environments ─────────────────────────────────────────────────────
+  - match: "client/src/environments/**"
+    rules:
+      - id: env-no-api-keys
+        severity: critical
+        instruction: >
+          Angular environment files are committed to source control and
+          bundled into the browser build. They must not contain API keys,
+          tokens, Google Maps API keys, or other secrets. Flag any string
+          value in environment.ts or environment.prod.ts that resembles
+          a key (long alphanumeric string, values containing "key",
+          "token", "secret", "apiKey").
+
+      - id: env-prod-flag
+        severity: medium
+        instruction: >
+          environment.prod.ts must always have `production: true` so that
+          Angular's production mode (and any code guarded by
+          environment.production) is correctly activated. Flag any change
+          that sets production to false in the prod environment file.
+
+  # ── Frontend Angular components ───────────────────────────────────────────────
   - match: "client/src/app/**/*.spec.ts"
     rules:
       - id: angular-test-not-empty
+        severity: medium
+        instruction: >
+          Angular spec files must contain meaningful test cases beyond the
+          auto-generated "should create" smoke test. Flag spec files that
+          only contain a single `it('should create')` test with no
+          assertions on component behaviour, output bindings, or service
+          interactions.
+
+  # ── Dockerfile ────────────────────────────────────────────────────────────────
+  - match: "Dockerfile"
+    rules:
+      - id: docker-no-latest-tag
+        severity: high
+        instruction: >
+          The Dockerfile currently uses `FROM node:latest` in both build
+          stages. The `latest` tag is unpinned and will silently break
+          builds when a new major Node.js version is released.
+          Flag any FROM instruction that uses `latest` or a non-specific
+          tag. Use a pinned version such as `node:20-alpine` instead.
+
+      - id: docker-no-root-user
+        severity: medium
+        instruction: >
+          The container runs as root by default (no USER instruction is
+          set before CMD). Flag Dockerfiles that lack a non-root USER
+          declaration before the final CMD/ENTRYPOINT. The app should
+          run as a non-privileged user.
+
+      - id: docker-no-build-secrets
+        severity: critical
+        instruction: >
+          ARG and ENV instructions in Dockerfiles bake values into image
+          layers, which are extractable with `docker history`. Secrets
+          must not be passed via ARG or ENV. Flag any ARG or ENV that
+          looks like a credential (contains "SECRET", "KEY", "TOKEN",
+          "PASSWORD", or is a long alphanumeric string).
+
+  # ── Dependency management ─────────────────────────────────────────────────────
+  - match: "package.json"
+    rules:
+      - id: deps-security-headers
+        severity: high
+        instruction: >
+          The Express server has no security middleware (no helmet, no CORS
+          headers, no rate limiting). Flag PRs that add new Express routes
+          or mount new middleware without also checking that helmet is
+          installed and configured, or that explicitly note why it is not
+          needed (e.g. purely internal service).
+
+      - id: deps-no-unused-packages
         severity: low
         instruction: >
-          Angular spec files should contain meaningful test cases.
-          Flag spec files that only contain the auto-generated
-          "should create" smoke test with no additional assertions.
+          Flag new packages added to "dependencies" that duplicate
+          functionality already present (e.g. adding another HTTP client
+          when supertest is already used, or adding a second YAML library).
+          Prefer extending existing utilities over adding new dependencies.
+
+  - match: "client/package.json"
+    rules:
+      - id: client-deps-no-api-keys-in-install
+        severity: high
+        instruction: >
+          Angular environment configuration must not rely on npm scripts
+          that embed API keys (e.g., Google Maps API key) as inline
+          arguments. Flag package.json scripts that pass keys as CLI flags
+          or environment variable assignments visible in the script string.
 
 categories:
   - id: security
     enabled: true
 
+  - id: correctness
+    enabled: true
+
   - id: test-quality
     enabled: true
 
-  - id: api-contract
+  - id: maintainability
     enabled: true
