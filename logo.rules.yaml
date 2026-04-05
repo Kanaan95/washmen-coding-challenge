@@ -1,0 +1,134 @@
+# logo.rules.yaml
+# Generated for: washmen-coding-challenge
+# Stack: Node.js/Express + Angular 12 + Docker
+# Generated: 2026-04-05
+
+version: 1
+
+defaults:
+  max_inline_comments: 4
+  minimum_confidence: 0.80
+
+paths:
+  # ── API routes ──────────────────────────────────────────────────────────────
+  - match: "routes/api/**"
+    rules:
+      - id: api-input-validation
+        severity: high
+        instruction: >
+          All query and path parameters must be validated before use.
+          Flag any endpoint that reads req.query or req.params without
+          type checking, range checking, or whitelist validation.
+
+      - id: api-no-hardcoded-coordinates
+        severity: medium
+        instruction: >
+          Business constants (e.g. reference coordinates, magic numbers)
+          should live in a config or constants file, not inline in route handlers.
+          Flag any hard-coded numeric literals that represent geo or domain values.
+
+  # ── Middleware ───────────────────────────────────────────────────────────────
+  - match: "middleware/**"
+    rules:
+      - id: middleware-blast-radius
+        severity: high
+        instruction: >
+          Middleware changes apply to every request. Any modification here
+          must include a description of the intended scope, and ideally a
+          corresponding test update in the test/ folder.
+
+  # ── Configuration ────────────────────────────────────────────────────────────
+  - match: "config/**"
+    rules:
+      - id: config-no-secrets
+        severity: high
+        instruction: >
+          Configuration files must not contain hard-coded secrets, API keys,
+          passwords, or tokens. All sensitive values must be read from
+          environment variables. Flag any string literal that looks like a
+          credential or key.
+
+      - id: config-env-vars-documented
+        severity: low
+        instruction: >
+          Any newly introduced environment variable should be mentioned in
+          README.md or an .env.example file so developers can onboard without
+          guessing required env setup.
+
+  # ── Core library ─────────────────────────────────────────────────────────────
+  - match: "lib/**"
+    rules:
+      - id: lib-test-coverage
+        severity: medium
+        instruction: >
+          Changes to lib/ (data access, helpers) should be accompanied by
+          corresponding test updates in test/. Flag PRs that modify lib/
+          but do not touch any spec file.
+
+  # ── Frontend services ────────────────────────────────────────────────────────
+  - match: "client/src/app/services/**"
+    rules:
+      - id: service-http-error-handling
+        severity: medium
+        instruction: >
+          HTTP services must handle errors at the appropriate layer and must
+          not retry on 4xx client errors (retrying on 400/404 is a bug).
+          Flag any Observable pipeline that applies retry() without filtering
+          out non-retriable status codes.
+
+  # ── Frontend environments ────────────────────────────────────────────────────
+  - match: "client/src/environments/**"
+    rules:
+      - id: env-no-api-keys
+        severity: high
+        instruction: >
+          Environment files are committed to source control. They must not
+          contain API keys, tokens, or secrets. Flag any string value that
+          resembles a key (long alphanumeric strings, values containing
+          "key", "token", "secret", "apiKey").
+
+  # ── Dockerfile ───────────────────────────────────────────────────────────────
+  - match: "Dockerfile"
+    rules:
+      - id: docker-no-root-user
+        severity: medium
+        instruction: >
+          The container should not run the application as root. Verify a
+          non-root USER is declared before the final CMD/ENTRYPOINT. Flag
+          if USER is absent.
+
+      - id: docker-no-build-secrets
+        severity: high
+        instruction: >
+          Build args and ENV instructions must not be used to pass secrets
+          into the image. Secrets baked into image layers are extractable.
+          Flag any ARG or ENV that looks like a credential.
+
+  # ── Tests ────────────────────────────────────────────────────────────────────
+  - match: "test/**"
+    rules:
+      - id: test-meaningful-assertions
+        severity: low
+        instruction: >
+          Tests should assert on response body shape and field values,
+          not just HTTP status codes. Flag test cases that only check
+          res.status without inspecting the returned data.
+
+  - match: "client/src/app/**/*.spec.ts"
+    rules:
+      - id: angular-test-not-empty
+        severity: low
+        instruction: >
+          Angular spec files should contain meaningful test cases.
+          Flag spec files that only contain the auto-generated
+          "should create" smoke test with no additional assertions.
+
+categories:
+  - id: security
+    enabled: true
+
+  - id: test-quality
+    enabled: true
+
+  - id: api-contract
+    enabled: true
