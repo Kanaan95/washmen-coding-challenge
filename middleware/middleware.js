@@ -14,5 +14,9 @@ module.exports = (req, res, next) => {
   // Add the query string in the req for API to use it
   req.data = queryStringObject;
   req.data.sortBy = queryStringObject.sortBy;
+
+  // Log incoming request parameters for debugging
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} query=${JSON.stringify(queryStringObject)}`);
+
   next();
 };

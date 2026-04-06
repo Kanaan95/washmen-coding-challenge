@@ -115,6 +115,8 @@ router.get("/search", (req, res) => {
 router.get("/nearest", (req, res) => {
   const limit = Number(req.data.limit);
   const units = req.data.units;
+  const sortBy = req.data.sortBy || "distance";
+  const order = req.data.order || "asc";
 
   const lat = 51.5144636;
   const long = -0.142571;
@@ -139,7 +141,10 @@ router.get("/nearest", (req, res) => {
         return { ...partner, minDistance };
       });
 
-      partnersWithDistance.sort((a, b) => a.minDistance - b.minDistance);
+      partnersWithDistance.sort((a, b) => {
+        const val = a[sortBy] - b[sortBy];
+        return order === "desc" ? -val : val;
+      });
       res.status(200).json(partnersWithDistance.slice(0, limit || 5));
     } else {
       res.status(500).json(err);
