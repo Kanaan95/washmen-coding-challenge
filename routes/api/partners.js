@@ -74,7 +74,7 @@ router.get("/search", (req, res) => {
 
               // Compare distance
               // If given range from Starbucks is greater than the distance between Starbucks and the office location, return the office obj with the partner data
-              if (Number(distance) >= d) {
+              if (Number(distance) >= d && d != null) {
                 office["distance"] = Math.round(d);
                 return true;
               }
@@ -105,6 +105,54 @@ router.get("/search", (req, res) => {
   // else {
   //   res.status(403).send({ error: "Invalid request. Missing required fields" });
   // }
+});
+
+/**
+ * @route           GET api/partners/nearest?limit=n&units=u
+ * @description     Returns the N nearest partners to the London meeting point
+ * @access          Public
+ */
+router.get("/nearest", (req, res) => {
+  const limit = parseInt(req.data.limit);
+  const units = req.data.units;
+  const sortBy = req.data.sortBy || "distance";
+  const order = req.data.order || "asc";
+
+  const lat = 51.5144636;
+  const long = -0.142571;
+
+  _data.read("partners", "partners", (err, data) => {
+    if (!err && data) {
+      const partnersWithDistance = data.map((partner) => {
+        const offices =
+          Array.isArray(partner.offices) && partner.offices.length > 0
+            ? partner.offices
+            : [];
+        let minDistance = Infinity;
+        for (const office of offices) {
+          const coords = office.coordinates.split(",");
+          const lat2 = Number(coords[0]);
+          const long2 = Number(coords[1]);
+          const d = _helpers.getGreatCircleDist(
+            { lat, long },
+            { lat: lat2, long: long2 },
+            units || "km"
+          );
+          if (d != null && d < minDistance) minDistance = d;
+        }
+        return { ...partner, minDistance };
+      });
+
+      partnersWithDistance.sort((a, b) => {
+        const val = a[sortBy] - b[sortBy];
+        return order === "desc" ? -val : val;
+      });
+      const sliceLimit = isNaN(limit) || limit <= 0 ? 5 : limit;
+      res.status(200).json(partnersWithDistance.slice(0, sliceLimit));
+    } else {
+      res.status(500).json(err);
+    }
+  });
 });
 
 /**
