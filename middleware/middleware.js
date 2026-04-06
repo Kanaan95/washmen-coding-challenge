@@ -13,5 +13,6 @@ module.exports = (req, res, next) => {
 
   // Add the query string in the req for API to use it
   req.data = queryStringObject;
+  req.data.sortBy = queryStringObject.sortBy;
   next();
 };

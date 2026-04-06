@@ -108,6 +108,46 @@ router.get("/search", (req, res) => {
 });
 
 /**
+ * @route           GET api/partners/nearest?limit=n&units=u
+ * @description     Returns the N nearest partners to the London meeting point
+ * @access          Public
+ */
+router.get("/nearest", (req, res) => {
+  const limit = Number(req.data.limit);
+  const units = req.data.units;
+
+  const lat = 51.5144636;
+  const long = -0.142571;
+
+  _data.read("partners", "partners", (err, data) => {
+    if (!err && data) {
+      const partnersWithDistance = data.map((partner) => {
+        const offices =
+          Array.isArray(partner.offices) && partner.offices.length > 0
+            ? partner.offices
+            : [];
+        let minDistance = Infinity;
+        for (const office of offices) {
+          const coords = office.coordinates.split(",");
+          const d = _helpers.getGreatCircleDist(
+            { lat, long },
+            { lat: Number(coords[0]), long: Number(coords[1]) },
+            units || "km"
+          );
+          if (d < minDistance) minDistance = d;
+        }
+        return { ...partner, minDistance };
+      });
+
+      partnersWithDistance.sort((a, b) => a.minDistance - b.minDistance);
+      res.status(200).json(partnersWithDistance.slice(0, limit || 5));
+    } else {
+      res.status(500).json(err);
+    }
+  });
+});
+
+/**
  * @route           GET api/partners
  * @description     Get partner
  * @access          Public
