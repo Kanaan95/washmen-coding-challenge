@@ -44,7 +44,7 @@ router.get("/search", (req, res) => {
   _data.read("partners", "partners", (err, data) => {
     // If data file is found
     if (!err && data) {
-      if (Number(distance) != 0 && units) {
+      if (Number(distance) != 0 && !isNaN(Number(distance)) && units) {
         // Filter the partners that are within the giving distance received from the query params
         const nearPartners = data.filter((partner) => {
           // Get the office(s) of the partner
@@ -74,7 +74,7 @@ router.get("/search", (req, res) => {
 
               // Compare distance
               // If given range from Starbucks is greater than the distance between Starbucks and the office location, return the office obj with the partner data
-              if (Number(distance) >= d) {
+              if (Number(distance) >= d && d != null) {
                 office["distance"] = Math.round(d);
                 return true;
               }
@@ -117,6 +117,8 @@ router.get("/nearest", (req, res) => {
   const units = req.data.units;
   const sortBy = req.data.sortBy || "distance";
   const order = req.data.order || "asc";
+  const ALLOWED_SORT_FIELDS = ["distance", "minDistance", "id"];
+  const ALLOWED_ORDERS = ["asc", "desc"];
 
   const lat = 51.5144636;
   const long = -0.142571;
@@ -145,7 +147,8 @@ router.get("/nearest", (req, res) => {
         const val = a[sortBy] - b[sortBy];
         return order === "desc" ? -val : val;
       });
-      res.status(200).json(partnersWithDistance.slice(0, limit || 5));
+      const sliceLimit = isNaN(limit) ? 5 : limit;
+      res.status(200).json(partnersWithDistance.slice(0, sliceLimit));
     } else {
       res.status(500).json(err);
     }
