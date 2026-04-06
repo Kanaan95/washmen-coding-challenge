@@ -113,7 +113,7 @@ router.get("/search", (req, res) => {
  * @access          Public
  */
 router.get("/nearest", (req, res) => {
-  const limit = Number(req.data.limit);
+  const limit = parseInt(req.data.limit);
   const units = req.data.units;
   const sortBy = req.data.sortBy || "distance";
   const order = req.data.order || "asc";
