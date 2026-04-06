@@ -133,12 +133,14 @@ router.get("/nearest", (req, res) => {
         let minDistance = Infinity;
         for (const office of offices) {
           const coords = office.coordinates.split(",");
+          const lat2 = Number(coords[0]);
+          const long2 = Number(coords[1]);
           const d = _helpers.getGreatCircleDist(
             { lat, long },
-            { lat: Number(coords[0]), long: Number(coords[1]) },
+            { lat: lat2, long: long2 },
             units || "km"
           );
-          if (d < minDistance) minDistance = d;
+          if (d != null && d < minDistance) minDistance = d;
         }
         return { ...partner, minDistance };
       });
@@ -147,7 +149,7 @@ router.get("/nearest", (req, res) => {
         const val = a[sortBy] - b[sortBy];
         return order === "desc" ? -val : val;
       });
-      const sliceLimit = isNaN(limit) ? 5 : limit;
+      const sliceLimit = isNaN(limit) || limit <= 0 ? 5 : limit;
       res.status(200).json(partnersWithDistance.slice(0, sliceLimit));
     } else {
       res.status(500).json(err);
